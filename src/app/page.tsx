@@ -1,65 +1,105 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getHistory, getQuestionSets } from '@/lib/storage';
+import { TestResult, QuestionSet } from '@/lib/disc-logic';
+
+export default function HomePage() {
+  const router = useRouter();
+  const [history, setHistory] = useState<TestResult[]>([]);
+  const [questionSets, setQuestionSets] = useState<QuestionSet[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      const [h, q] = await Promise.all([getHistory(), getQuestionSets()]);
+      setHistory(h);
+      setQuestionSets(q);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  if (loading) return <div className="p-12 text-center text-muted-foreground">Loading dashboard...</div>;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen p-8 max-w-7xl mx-auto">
+      <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-gradient">HR Psychology Dashboard</h1>
+          <p className="text-muted-foreground text-lg">Manage assessments and view insights for your team.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="flex gap-4">
+          <button 
+            onClick={() => router.push('/admin')}
+            className="px-6 py-3 rounded-xl bg-secondary font-bold hover:bg-secondary/80 transition-all border border-border"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Manage Questions
+          </button>
+          <button 
+            onClick={() => router.push('/test')}
+            className="px-6 py-3 rounded-xl grad-primary text-white font-bold hover:scale-105 transition-all shadow-lg"
           >
-            Documentation
-          </a>
+            Take New Test
+          </button>
         </div>
-      </main>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl">
+          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Assessments</span>
+          <div className="text-5xl font-black mt-2 text-primary">{history.length}</div>
+        </div>
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl">
+          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Available Sets</span>
+          <div className="text-5xl font-black mt-2 text-primary">{questionSets.length}</div>
+        </div>
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl bg-primary/5">
+          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Quick Insight</span>
+          <div className="text-lg font-bold mt-2 leading-tight">Ready for analysis of your behavioral profile.</div>
+        </div>
+      </div>
+
+      <section>
+        <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+          <span className="w-2 h-8 grad-primary rounded-full" />
+          Recent Test History
+        </h2>
+        
+        {history.length === 0 ? (
+          <div className="glass p-12 rounded-3xl text-center border-dashed border-2 border-border">
+            <p className="text-muted-foreground text-lg mb-6">No assessments taken yet.</p>
+            <button onClick={() => router.push('/test')} className="text-primary font-black hover:underline underline-offset-4">START YOUR FIRST TEST →</button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {history.map((result) => (
+              <div 
+                key={result.id}
+                onClick={() => router.push(`/result?id=${result.id}`)}
+                className="glass p-6 rounded-3xl border border-white/20 hover:border-primary/50 cursor-pointer transition-all hover:scale-[1.02] shadow-sm select-none"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-xs font-bold text-muted-foreground">{new Date(result.date).toLocaleDateString()}</span>
+                  <div className="flex gap-1">
+                    {(['D', 'I', 'S', 'C'] as const).map((trait) => {
+                      const score = result.scores[trait] || 0;
+                      return (
+                        <span key={trait} className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-black ${score > 0 ? 'bg-primary/10 text-primary' : score < 0 ? 'bg-warning/10 text-warning': 'bg-secondary text-muted-foreground'}`}>
+                          {trait}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+                <h3 className="text-xl font-black mb-1">{result.userName}</h3>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest font-black">Behavioral Profile</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
