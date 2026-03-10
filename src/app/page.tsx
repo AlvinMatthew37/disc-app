@@ -73,28 +73,40 @@ export default function HomePage() {
             <button onClick={() => router.push('/test')} className="text-primary font-black hover:underline underline-offset-4">START YOUR FIRST TEST →</button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-4">
             {history.map((result) => (
               <div 
                 key={result.id}
                 onClick={() => router.push(`/result?id=${result.id}`)}
-                className="glass p-6 rounded-3xl border border-white/20 hover:border-primary/50 cursor-pointer transition-all hover:scale-[1.02] shadow-sm select-none"
+                className="glass p-5 rounded-2xl border border-white/20 hover:border-primary/50 cursor-pointer transition-all hover:scale-[1.01] shadow-sm select-none flex flex-col md:flex-row md:items-center justify-between gap-4"
               >
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-xs font-bold text-muted-foreground">{new Date(result.date).toLocaleDateString()}</span>
-                  <div className="flex gap-1">
+                <div className="flex flex-col">
+                  <h3 className="text-xl font-black">{result.userName}</h3>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">Behavioral Profile</p>
+                    <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{new Date(result.date).toLocaleDateString()}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex gap-1.5">
                     {(['D', 'I', 'S', 'C'] as const).map((trait) => {
                       const score = result.scores[trait] || 0;
                       return (
-                        <span key={trait} className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-black ${score > 0 ? 'bg-primary/10 text-primary' : score < 0 ? 'bg-warning/10 text-warning': 'bg-secondary text-muted-foreground'}`}>
-                          {trait}
-                        </span>
+                        <div key={trait} className="flex flex-col items-center gap-1">
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${score > 0 ? 'bg-primary/10 text-primary border border-primary/20' : score < 0 ? 'bg-warning/10 text-warning border border-warning/20': 'bg-secondary/50 text-muted-foreground border border-border'}`}>
+                            {trait}
+                          </span>
+                        </div>
                       );
                     })}
                   </div>
+                  
+                  <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black mb-1">{result.userName}</h3>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest font-black">Behavioral Profile</p>
               </div>
             ))}
           </div>

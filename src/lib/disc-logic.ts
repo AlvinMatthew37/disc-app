@@ -15,6 +15,7 @@ export interface TestResult {
   date: string;
   userName: string;
   scores: Record<Trait, number>;
+  report?: string;
 }
 
 export interface Answer {

@@ -56,7 +56,8 @@ export async function getHistory(): Promise<TestResult[]> {
     id: item.id,
     date: item.created_at,
     userName: item.user_name,
-    scores: item.scores
+    scores: item.scores,
+    report: item.report
   })) as TestResult[];
 }
 
@@ -77,7 +78,8 @@ export async function getResultById(id: string): Promise<TestResult | null> {
     id: data.id,
     date: data.created_at,
     userName: data.user_name,
-    scores: data.scores
+    scores: data.scores,
+    report: data.report
   } as TestResult;
 }
 
@@ -88,8 +90,19 @@ export async function saveResult(result: TestResult): Promise<void> {
     .insert({
       id: result.id,
       user_name: result.userName,
-      scores: result.scores
+      scores: result.scores,
+      report: result.report
     });
 
   if (error) console.error('Error saving result:', error);
+}
+
+export async function updateResultReport(id: string, report: string): Promise<void> {
+  if (!supabase) return;
+  const { error } = await supabase
+    .from('test_results')
+    .update({ report })
+    .eq('id', id);
+
+  if (error) console.error('Error updating result report:', error);
 }
