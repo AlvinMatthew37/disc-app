@@ -168,9 +168,9 @@ Keep the tone professional, insightful, and constructive. Return the response in
                   const d = `M ${points.map(p => `${p.x} ${p.y}`).join(' L ')}`;
                   return (
                     <>
-                      <path d={d} fill="none" stroke="#0070c0" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d={d} fill="none" stroke="#969696ff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                       {points.map((p, i) => (
-                        <circle key={i} cx={p.x} cy={p.y} r="8" fill="#0070c0" />
+                        <circle key={i} cx={p.x} cy={p.y} r="8" fill="#908b13" />
                       ))}
                     </>
                   );
