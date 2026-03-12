@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionSet, Trait, calculateScores, TestResult, Answer } from '@/lib/disc-logic';
 import { getQuestionSets, saveResult } from '@/lib/storage';
-import { Check, ArrowRight, Timer, ClipboardList } from 'lucide-react';
+import { Check, ArrowRight, Timer, ClipboardList, ChevronLeft } from 'lucide-react';
 
 // Fisher-Yates Shuffle
 function shuffle<T>(array: T[]): T[] {
@@ -29,6 +29,7 @@ export default function TestPage() {
   
   const [currentMost, setCurrentMost] = useState<Trait | null>(null);
   const [currentLeast, setCurrentLeast] = useState<Trait | null>(null);
+  const [maxReachedIndex, setMaxReachedIndex] = useState(0);
 
   // Timer logic
   useEffect(() => {
@@ -66,6 +67,18 @@ export default function TestPage() {
     loadSets();
   }, []);
 
+  const loadSelectionForIndex = (index: number, currentAnswers: Answer[]) => {
+    const nextSet = randomizedSets[index];
+    const existingAnswer = currentAnswers.find(a => a.questionSetId === nextSet.id);
+    if (existingAnswer) {
+      setCurrentMost(existingAnswer.most);
+      setCurrentLeast(existingAnswer.least);
+    } else {
+      setCurrentMost(null);
+      setCurrentLeast(null);
+    }
+  };
+
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
     if (userName.trim() && rawSets.length > 0) {
@@ -74,6 +87,7 @@ export default function TestPage() {
   };
 
   const finishAssessment = async (finalAnswers: Answer[]) => {
+    setLoading(true);
     const scores = calculateScores(finalAnswers);
     const result: TestResult = {
       id: crypto.randomUUID(),
@@ -85,11 +99,8 @@ export default function TestPage() {
     router.push(`/result?id=${result.id}`);
   };
 
-  const handleNext = async () => {
-    if (!currentMost || !currentLeast) {
-      alert("Please select both 'Most' and 'Least' for this set.");
-      return;
-    }
+  const saveCurrentSelection = () => {
+    if (!currentMost || !currentLeast) return answers;
 
     const currentSet = randomizedSets[currentIndex];
     const newAnswer: Answer = {
@@ -98,16 +109,47 @@ export default function TestPage() {
       least: currentLeast,
     };
 
-    const newAnswers = [...answers, newAnswer];
-    setAnswers(newAnswers);
+    const existingIndex = answers.findIndex(a => a.questionSetId === currentSet.id);
+    let updated;
+    if (existingIndex > -1) {
+      updated = [...answers];
+      updated[existingIndex] = newAnswer;
+    } else {
+      updated = [...answers, newAnswer];
+    }
+    setAnswers(updated);
+    return updated;
+  };
+
+  const handleNext = async () => {
+    const updatedAnswers = saveCurrentSelection();
+    
+    const nextIndex = currentIndex + 1;
+    if (nextIndex > maxReachedIndex) {
+      setMaxReachedIndex(nextIndex);
+    }
 
     if (currentIndex < randomizedSets.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setCurrentMost(null);
-      setCurrentLeast(null);
+      loadSelectionForIndex(nextIndex, updatedAnswers);
+      setCurrentIndex(nextIndex);
     } else {
-      await finishAssessment(newAnswers);
+      await finishAssessment(updatedAnswers);
     }
+  };
+
+  const handleBack = () => {
+    const updatedAnswers = saveCurrentSelection();
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      loadSelectionForIndex(prevIndex, updatedAnswers);
+      setCurrentIndex(prevIndex);
+    }
+  };
+
+  const goToQuestion = (index: number) => {
+    const updatedAnswers = saveCurrentSelection();
+    loadSelectionForIndex(index, updatedAnswers);
+    setCurrentIndex(index);
   };
 
   if (loading) {
@@ -188,10 +230,10 @@ export default function TestPage() {
         <div className="glass rounded-3xl overflow-hidden shadow-2xl border-white/20">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-primary/5 text-muted-foreground text-xs font-bold uppercase tracking-tighter">
-                <th className="p-6 text-center w-24">S (Most)</th>
-                <th className="p-6 text-center w-24">T (Least)</th>
-                <th className="p-6 text-left">Pernyataan (Statement)</th>
+              <tr className="bg-primary/5 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]">
+                <th className="p-6 text-center w-28 italic">Most (M)</th>
+                <th className="p-6 text-center w-28 italic">Least (L)</th>
+                <th className="p-6 text-center">Pernyataan (Statement)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
@@ -203,9 +245,9 @@ export default function TestPage() {
                         setCurrentMost(opt.trait);
                         if (currentLeast === opt.trait) setCurrentLeast(null);
                       }}
-                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center ${
+                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center mx-auto ${
                         currentMost === opt.trait 
-                        ? 'bg-yellow-400 border-yellow-500 text-black shadow-inner translate-y-1' 
+                        ? 'bg-yellow-400 border-yellow-500 text-black shadow-inner translate-y-0.5' 
                         : 'bg-background border-border hover:border-yellow-400 text-transparent'
                       }`}
                     >
@@ -218,16 +260,16 @@ export default function TestPage() {
                         setCurrentLeast(opt.trait);
                         if (currentMost === opt.trait) setCurrentMost(null);
                       }}
-                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center ${
+                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center mx-auto ${
                         currentLeast === opt.trait 
-                        ? 'bg-green-500 border-green-600 text-white shadow-inner translate-y-1' 
+                        ? 'bg-green-500 border-green-600 text-white shadow-inner translate-y-0.5' 
                         : 'bg-background border-border hover:border-green-500 text-transparent'
                       }`}
                     >
                       <Check size={24} strokeWidth={3} className={currentLeast === opt.trait ? 'opacity-100' : 'opacity-0'} />
                     </button>
                   </td>
-                  <td className="p-6 text-lg font-medium">
+                  <td className="p-6 text-lg font-medium text-center">
                     {opt.text}
                   </td>
                 </tr>
@@ -236,18 +278,73 @@ export default function TestPage() {
           </table>
           
           <div className="p-8 bg-secondary/30 flex justify-between items-center">
-             <p className="text-sm text-muted-foreground italic">
-                  {currentMost && currentLeast 
-                  ? "Selection complete! Click next." 
-                  : "Please choose one statement you agree with MOST, and one you LEAST agree with."}
-                </p>
-             <button
-               onClick={handleNext}
-               disabled={!currentMost || !currentLeast}
-               className="bg-primary px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 flex items-center gap-3"
-             >
-               NEXT SET <ArrowRight size={20} />
-             </button>
+             <div className="flex gap-4">
+              <button
+                onClick={handleBack}
+                disabled={currentIndex === 0}
+                className="px-6 py-4 rounded-xl bg-background border border-border text-muted-foreground font-bold hover:bg-secondary transition-all disabled:opacity-30 disabled:hover:bg-background flex items-center gap-2"
+              >
+                <ChevronLeft size={20} /> PREVIOUS
+              </button>
+             </div>
+
+             <div className="flex items-center gap-6">
+               <p className={`text-xs font-bold uppercase tracking-wider transition-all ${
+                    currentMost && currentLeast ? 'text-success' : 'text-muted-foreground'
+               }`}>
+                    {currentMost && currentLeast 
+                    ? "Selection complete ✓" 
+                    : "Selection required to proceed"}
+               </p>
+               <button
+                 onClick={handleNext}
+                 disabled={!currentMost || !currentLeast}
+                 className={`px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-20 disabled:hover:scale-100 ${
+                   !currentMost || !currentLeast ? 'bg-muted-foreground' : 'bg-primary'
+                 }`}
+               >
+                 {currentIndex === randomizedSets.length - 1 ? 'FINISH TEST' : 'NEXT SET'} 
+                 <ArrowRight size={20} />
+               </button>
+             </div>
+          </div>
+        </div>
+
+        {/* Question Jumper */}
+        <div className="mt-8 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <ClipboardList size={16} /> Question Navigator
+            </h3>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase">
+              {answers.length} of {randomizedSets.length} Answered
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {randomizedSets.map((set, idx) => {
+              const isAnswered = answers.some(a => a.questionSetId === set.id);
+              const isCurrent = idx === currentIndex;
+              const isLocked = idx > maxReachedIndex;
+              
+              return (
+                <button
+                  key={set.id}
+                  onClick={() => !isLocked && goToQuestion(idx)}
+                  disabled={isLocked}
+                  className={`w-12 h-12 rounded-xl font-black text-xs transition-all flex items-center justify-center border-2 ${
+                    isCurrent 
+                      ? 'bg-primary border-primary text-white shadow-lg scale-110 z-10' 
+                      : isLocked
+                        ? 'bg-secondary/20 border-secondary/10 text-muted-foreground/20 cursor-not-allowed'
+                        : isAnswered 
+                          ? 'bg-success/10 border-success/30 text-success hover:bg-success/20' 
+                          : 'bg-background border-border text-muted-foreground hover:border-primary/30'
+                  }`}
+                >
+                  {idx + 1}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

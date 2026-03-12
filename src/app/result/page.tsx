@@ -207,9 +207,7 @@ function ResultContent() {
       {/* AI Behavioral Analysis - Full Width Center */}
       <div className="mt-10 flex flex-col gap-5">
         <h3 className="text-xl font-black text-[#1a2d4d] flex items-center gap-3 justify-center uppercase tracking-widest italic">
-          <BrainCircuit className="text-primary" size={24} />
           AI Behavioral Analysis
-          <BrainCircuit className="text-primary" size={24} />
         </h3>
         
         {generating && (
