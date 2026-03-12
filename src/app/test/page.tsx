@@ -22,11 +22,30 @@ export default function TestPage() {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [userName, setUserName] = useState('');
   const [isStarted, setIsStarted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(1800); // 10 seconds for testing
   
   const [loading, setLoading] = useState(true);
   
   const [currentMost, setCurrentMost] = useState<Trait | null>(null);
   const [currentLeast, setCurrentLeast] = useState<Trait | null>(null);
+
+  // Timer logic
+  useEffect(() => {
+    if (!isStarted || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          finishAssessment(answers);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isStarted, timeLeft, answers]);
 
   // Randomize sets and options once when starting
   const randomizedSets = useMemo(() => {
@@ -53,6 +72,18 @@ export default function TestPage() {
     }
   };
 
+  const finishAssessment = async (finalAnswers: Answer[]) => {
+    const scores = calculateScores(finalAnswers);
+    const result: TestResult = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      userName,
+      scores,
+    };
+    await saveResult(result);
+    router.push(`/result?id=${result.id}`);
+  };
+
   const handleNext = async () => {
     if (!currentMost || !currentLeast) {
       alert("Please select both 'Most' and 'Least' for this set.");
@@ -74,15 +105,7 @@ export default function TestPage() {
       setCurrentMost(null);
       setCurrentLeast(null);
     } else {
-      const scores = calculateScores(newAnswers);
-      const result: TestResult = {
-        id: crypto.randomUUID(),
-        date: new Date().toISOString(),
-        userName,
-        scores,
-      };
-      await saveResult(result);
-      router.push(`/result?id=${result.id}`);
+      await finishAssessment(newAnswers);
     }
   };
 
@@ -128,13 +151,30 @@ export default function TestPage() {
   const currentSet = randomizedSets[currentIndex];
   const progress = ((currentIndex + 1) / randomizedSets.length) * 100;
 
+  // Format time (MM:SS)
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
   return (
     <div className="min-h-screen p-8 flex flex-col items-center">
       <div className="w-full max-w-5xl">
         <div className="mb-12">
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Set {currentIndex + 1} of {randomizedSets.length}</span>
-            <span className="text-sm font-black text-primary">{Math.round(progress)}%</span>
+          <div className="flex justify-between items-end mb-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">Progress</span>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl font-black text-foreground">Set {currentIndex + 1}</span>
+                <span className="text-sm font-bold text-muted-foreground">of {randomizedSets.length}</span>
+              </div>
+            </div>
+
+            <div className={`flex flex-col items-end gap-1 ${timeLeft <= 5 ? 'animate-pulse' : ''}`}>
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">Time Remaining</span>
+              <span className={`text-3xl font-black tabular-nums ${timeLeft <= 5 ? 'text-destructive' : 'text-primary'}`}>
+                {timeString}
+              </span>
+            </div>
           </div>
           <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
             <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
@@ -165,7 +205,7 @@ export default function TestPage() {
                         : 'bg-background border-border hover:border-yellow-400 text-transparent'
                       }`}
                     >
-                      X
+                      ✓
                     </button>
                   </td>
                   <td className="p-4 text-center">
@@ -180,7 +220,7 @@ export default function TestPage() {
                         : 'bg-background border-border hover:border-green-500 text-transparent'
                       }`}
                     >
-                      X
+                      ✓
                     </button>
                   </td>
                   <td className="p-6 text-lg font-medium">
@@ -193,10 +233,10 @@ export default function TestPage() {
           
           <div className="p-8 bg-secondary/30 flex justify-between items-center">
              <p className="text-sm text-muted-foreground italic">
-                {currentMost && currentLeast 
+                  {currentMost && currentLeast 
                   ? "Selection complete! Click next." 
                   : "Please choose one statement you agree with MOST, and one you LEAST agree with."}
-             </p>
+                </p>
              <button
                onClick={handleNext}
                disabled={!currentMost || !currentLeast}

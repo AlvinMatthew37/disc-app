@@ -144,3 +144,8 @@
 .grad-disc {
   background: linear-gradient(135deg, var(--disc-d), var(--disc-i), var(--disc-s), var(--disc-c));
 }
+
+
+.test{
+  @apply min-h-screen max-w-5xl mx-auto px-4 py-6
+}

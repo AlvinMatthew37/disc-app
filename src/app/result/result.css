@@ -1,0 +1,173 @@
+@reference "../globals.css";
+
+.result-container {
+  @apply min-h-screen max-w-5xl mx-auto px-4 py-6;
+}
+
+.result-header {
+  @apply flex justify-between items-center mb-8;
+}
+
+.back-button {
+  @apply px-5 py-2.5 rounded-lg bg-secondary text-sm font-bold hover:bg-secondary/80 transition-all border border-border flex items-center gap-2 group;
+}
+
+.back-button-icon {
+  @apply group-hover:-translate-x-1 transition-transform;
+}
+
+.header-info {
+  @apply text-right;
+}
+
+.header-title {
+  @apply text-2xl font-black text-primary italic;
+}
+
+.header-subtitle {
+  @apply text-xs text-muted-foreground;
+}
+
+.user-name {
+  @apply text-foreground font-semibold underline decoration-primary decoration-2;
+}
+
+.main-grid {
+  @apply grid grid-cols-1 lg:grid-cols-12 gap-6 items-start;
+}
+
+.left-column {
+  @apply lg:col-span-9 flex flex-col gap-6;
+}
+
+.right-column {
+  @apply lg:col-span-3 flex flex-col gap-4;
+}
+
+.result-card {
+  @apply relative w-full bg-white p-6 rounded-2xl shadow-xl border border-border;
+}
+
+.card-header {
+  @apply text-center mb-4;
+}
+
+.card-title {
+  @apply text-lg font-bold text-[#1a2d4d];
+}
+
+.chart-container {
+  @apply relative h-[380px] w-full bg-white;
+}
+
+.chart-svg {
+  @apply absolute inset-0 w-full h-full overflow-visible;
+}
+
+.chart-label-y {
+  @apply text-[10px] font-bold fill-muted-foreground;
+}
+
+.chart-label-x-main {
+  @apply text-[14px] font-black fill-[#1a2d4d];
+}
+
+.chart-label-x-sub {
+  @apply text-[10px] font-bold fill-muted-foreground;
+}
+
+.primary-style-card {
+  @apply glass p-6 rounded-[28px] border-l-12 border-l-primary shadow-xl;
+}
+
+.primary-style-title {
+  @apply text-xl font-black mb-2 text-[#1a2d4d];
+}
+
+.primary-style-desc {
+  @apply text-base text-muted-foreground leading-relaxed italic;
+}
+
+.trait-list {
+  @apply flex flex-col gap-2;
+}
+
+.trait-item {
+  @apply p-3 rounded-xl bg-[#f2f4f7] border border-border shadow-inner flex items-center gap-3 group hover:bg-white transition-colors;
+}
+
+.trait-icon {
+  @apply w-9 h-9 rounded-lg flex items-center justify-center font-black text-lg bg-white text-[#1a2d4d] shadow-sm group-hover:scale-110 transition-transform shrink-0;
+}
+
+.trait-info {
+  @apply flex flex-col min-w-0;
+}
+
+.trait-label {
+  @apply text-[11px] font-bold text-muted-foreground uppercase tracking-widest;
+}
+
+.trait-score {
+  @apply text-xl font-black text-[#1a2d4d];
+}
+
+.ai-section {
+  @apply mt-10 flex flex-col gap-5;
+}
+
+.ai-title {
+  @apply text-xl font-black text-[#1a2d4d] flex items-center gap-3 justify-center;
+}
+
+.ai-title-dash {
+  @apply w-8 h-1.5 bg-primary rounded-full;
+}
+
+.loading-card {
+  @apply p-10 rounded-[32px] glass border border-white/20 flex flex-col items-center justify-center gap-5 text-center shadow-2xl;
+}
+
+.loading-spinner {
+  @apply w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin;
+}
+
+.loading-text {
+  @apply text-lg font-black text-primary animate-pulse;
+}
+
+.loading-subtext {
+  @apply text-sm text-muted-foreground mt-1.5 font-medium;
+}
+
+.error-card {
+  @apply p-5 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center font-bold shadow-lg;
+}
+
+.retry-button {
+  @apply ml-4 px-4 py-2 bg-destructive/20 rounded-xl hover:bg-destructive/30 transition-all;
+}
+
+.analysis-card {
+  @apply glass p-8 rounded-[32px] border border-white/20 shadow-2xl bg-white/40 backdrop-blur-xl relative overflow-hidden group;
+}
+
+.analysis-accent {
+  @apply absolute top-0 left-0 w-full h-1 bg-primary opacity-50;
+}
+
+.analysis-content {
+  @apply max-w-none leading-relaxed text-sm font-medium;
+}
+
+.analysis-footer {
+  @apply mt-8 pt-6 border-t border-border/50 flex justify-between items-center;
+}
+
+.footer-note {
+  @apply text-xs font-black text-muted-foreground uppercase tracking-[0.2em];
+}
+
+.reset-button {
+  @apply px-5 py-2 rounded-xl bg-secondary/50 text-xs font-black text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all uppercase tracking-widest border border-transparent hover:border-primary/20;
+}
