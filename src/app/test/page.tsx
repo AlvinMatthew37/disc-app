@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionSet, Trait, calculateScores, TestResult, Answer } from '@/lib/disc-logic';
 import { getQuestionSets, saveResult } from '@/lib/storage';
+import { generateUUID } from '@/lib/utils';
 import { Check, ArrowRight, Timer, ClipboardList, ChevronLeft } from 'lucide-react';
 
 // Fisher-Yates Shuffle
@@ -90,7 +91,7 @@ export default function TestPage() {
     setLoading(true);
     const scores = calculateScores(finalAnswers);
     const result: TestResult = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       date: new Date().toISOString(),
       userName,
       scores,

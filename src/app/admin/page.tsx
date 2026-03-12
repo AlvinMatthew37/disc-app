@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { QuestionSet, Option, Trait } from '@/lib/disc-logic';
 import { getQuestionSets, saveQuestionSet, deleteQuestionSet } from '@/lib/storage';
+import { generateUUID } from '@/lib/utils';
 import { Pencil, Plus, Trash2, FlaskConical, ListChecks, X } from 'lucide-react';
 
 export default function AdminPage() {
@@ -37,7 +38,7 @@ export default function AdminPage() {
     ];
 
     const newSet: QuestionSet = {
-      id: editingId || crypto.randomUUID(),
+      id: editingId || generateUUID(),
       options: setOptionsArr,
     };
 
