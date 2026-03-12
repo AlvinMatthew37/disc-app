@@ -100,7 +100,7 @@ Keep the tone professional, insightful, and constructive. Return the response in
           DASHBOARD
         </button>
         <div className="text-right">
-          <h1 className="text-3xl font-black text-gradient italic">Assessment Result</h1>
+          <h1 className="text-3xl font-black text-primary italic">Assessment Result</h1>
           <p className="text-sm text-muted-foreground">Position Analysis for <span className="text-foreground font-semibold underline decoration-primary decoration-2">{result.userName}</span></p>
         </div>
       </div>
@@ -221,9 +221,9 @@ Keep the tone professional, insightful, and constructive. Return the response in
       {/* AI Behavioral Analysis - Full Width Center */}
       <div className="mt-12 max-w-5xl mx-auto flex flex-col gap-6">
         <h3 className="text-2xl font-black text-[#1a2d4d] flex items-center gap-3 justify-center">
-          <span className="w-8 h-1.5 grad-primary rounded-full" />
+          <span className="w-8 h-1.5 bg-primary rounded-full" />
           AI Behavioral Analysis
-          <span className="w-8 h-1.5 grad-primary rounded-full" />
+          <span className="w-8 h-1.5 bg-primary rounded-full" />
         </h3>
         
         {generating && (
@@ -245,7 +245,7 @@ Keep the tone professional, insightful, and constructive. Return the response in
 
         {aiAnalysis && (
           <div className="glass p-10 rounded-[40px] border border-white/20 shadow-2xl bg-white/40 backdrop-blur-xl relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 grad-primary opacity-50" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-primary opacity-50" />
             <div className="prose prose-lg prose-slate max-w-none whitespace-pre-wrap leading-relaxed font-medium text-[#2d3748]">
               {aiAnalysis}
             </div>

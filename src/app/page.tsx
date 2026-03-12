@@ -27,7 +27,7 @@ export default function HomePage() {
     <div className="min-h-screen p-8 max-w-7xl mx-auto">
       <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-gradient">HR Psychology Dashboard</h1>
+          <h1 className="text-4xl font-black text-primary">HR Psychology Dashboard</h1>
           <p className="text-muted-foreground text-lg">Manage assessments and view insights for your team.</p>
         </div>
         <div className="flex gap-4">
@@ -39,7 +39,7 @@ export default function HomePage() {
           </button>
           <button 
             onClick={() => router.push('/test')}
-            className="px-6 py-3 rounded-xl grad-primary text-white font-bold hover:scale-105 transition-all shadow-lg"
+            className="px-6 py-3 rounded-xl bg-primary text-white font-bold hover:scale-105 transition-all shadow-lg"
           >
             Take New Test
           </button>
@@ -63,7 +63,7 @@ export default function HomePage() {
 
       <section>
         <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
-          <span className="w-2 h-8 grad-primary rounded-full" />
+          <span className="w-2 h-8 bg-primary rounded-full" />
           Recent Test History
         </h2>
         
@@ -95,7 +95,7 @@ export default function HomePage() {
                       const score = result.scores[trait] || 0;
                       return (
                         <div key={trait} className="flex flex-col items-center gap-1">
-                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${score > 0 ? 'bg-primary/10 text-primary border border-primary/20' : score < 0 ? 'bg-warning/10 text-warning border border-warning/20': 'bg-secondary/50 text-muted-foreground border border-border'}`}>
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${score > 0 ? 'bg-success/10 text-success border border-success/20' : score < 0 ? 'bg-warning/10 text-warning border border-warning/20': 'bg-secondary/50 text-muted-foreground border border-border'}`}>
                             {trait}
                           </span>
                         </div>

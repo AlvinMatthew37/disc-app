@@ -11,7 +11,7 @@
   --popover: #ffffff;
   --popover-foreground: #020617;
   
-  --primary: #2563eb;
+  --primary: #908b13;
   --primary-foreground: #f8fafc;
   
   --secondary: #f1f5f9;
@@ -28,6 +28,9 @@
 
   --warning: #f5cd1d;
   --warning-foreground: #f8fafc;
+
+  --success: #2563eb;
+  --success-foreground: #f8fafc;
 
   --border: #e2e8f0;
   --input: #e2e8f0;
@@ -85,6 +88,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-warning: var(--warning);
@@ -123,7 +128,7 @@
 }
 
 /* Premium Gradients */
-.grad-primary {
+/* .grad-primary {
   background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
 }
 
@@ -134,7 +139,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
   display: inline-block;
-}
+} */
 
 .grad-disc {
   background: linear-gradient(135deg, var(--disc-d), var(--disc-i), var(--disc-s), var(--disc-c));

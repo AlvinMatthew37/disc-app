@@ -95,7 +95,7 @@ export default function TestPage() {
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-3xl font-bold mb-4">No Question Sets</h2>
         <p className="text-muted-foreground mb-8">Please add sets of 4 statements in the Admin panel.</p>
-        <button onClick={() => router.push('/admin')} className="grad-primary px-8 py-3 rounded-xl text-white font-bold">Admin Panel</button>
+        <button onClick={() => router.push('/admin')} className="bg-primary px-8 py-3 rounded-xl text-white font-bold">Admin Panel</button>
       </div>
     );
   }
@@ -118,7 +118,7 @@ export default function TestPage() {
                 required
               />
             </div>
-            <button type="submit" className="w-full grad-primary text-white font-bold py-4 rounded-xl">Start Test</button>
+            <button type="submit" className="w-full bg-primary text-white font-bold py-4 rounded-xl">Start Test</button>
           </form>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function TestPage() {
             <span className="text-sm font-black text-primary">{Math.round(progress)}%</span>
           </div>
           <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-            <div className="h-full grad-primary transition-all duration-500" style={{ width: `${progress}%` }} />
+            <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
@@ -200,7 +200,7 @@ export default function TestPage() {
              <button
                onClick={handleNext}
                disabled={!currentMost || !currentLeast}
-               className="grad-primary px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100"
+               className="bg-primary px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100"
              >
                NEXT SET →
              </button>

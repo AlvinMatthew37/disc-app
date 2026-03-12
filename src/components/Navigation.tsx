@@ -18,7 +18,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 grad-primary rounded-lg flex items-center justify-center text-white font-black text-lg group-hover:scale-110 transition-transform shadow-md">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-lg group-hover:scale-110 transition-transform shadow-md">
                 D
               </div>
               <span className="text-xl font-black tracking-tight text-foreground hidden sm:block">DISC Portal</span>

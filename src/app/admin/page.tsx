@@ -67,7 +67,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen p-8 max-w-7xl mx-auto">
       <header className="mb-12">
-        <h1 className="text-4xl font-black text-gradient italic">Question Lab</h1>
+        <h1 className="text-4xl font-black text-primary italic">Question Lab</h1>
         <p className="text-muted-foreground text-lg">Define the behavioral sets used in the DISC assessment.</p>
       </header>
 
@@ -95,7 +95,7 @@ export default function AdminPage() {
                 </div>
               ))}
               <div className="flex gap-3">
-                <button type="submit" className="flex-1 grad-primary text-white font-black py-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <button type="submit" className="flex-1 bg-primary text-white font-black py-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all">
                   {editingId ? 'UPDATE SET' : 'ADD TO LIBRARY'}
                 </button>
                 {editingId && (
@@ -118,7 +118,7 @@ export default function AdminPage() {
         {/* List */}
         <div className="lg:col-span-2">
           <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
-             <span className="w-2 h-8 grad-primary rounded-full" />
+             <span className="w-2 h-8 bg-primary rounded-full" />
              Active Question Sets
           </h2>
           <div className="space-y-4">

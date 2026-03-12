@@ -58,7 +58,7 @@ export default function AITestPage() {
   return (
     <div className="min-h-screen p-8 max-w-4xl mx-auto">
       <header className="mb-8">
-        <h1 className="text-3xl font-black text-gradient">AI Model Test</h1>
+        <h1 className="text-3xl font-black text-primary">AI Model Test</h1>
         <p className="text-muted-foreground">Verify connection to Ollama ({process.env.NEXT_PUBLIC_OLLAMA_MODEL || 'gemma3:12b'})</p>
       </header>
 
@@ -76,7 +76,7 @@ export default function AITestPage() {
         <button
           onClick={handleTest}
           disabled={loading || !prompt.trim()}
-          className="px-8 py-4 rounded-2xl grad-primary text-white font-black hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-50 disabled:scale-100"
+          className="px-8 py-4 rounded-2xl bg-primary text-white font-black hover:scale-[1.02] active:scale-95 transition-all shadow-lg disabled:opacity-50 disabled:scale-100"
         >
           {loading ? 'Thinking...' : 'Run Test'}
         </button>
