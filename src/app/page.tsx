@@ -4,6 +4,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getHistory, getQuestionSets } from '@/lib/storage';
 import { TestResult, QuestionSet } from '@/lib/disc-logic';
+import { 
+  LayoutDashboard, 
+  ClipboardList, 
+  PlusCircle, 
+  Users, 
+  Activity, 
+  TrendingUp,
+  History,
+  ChevronRight,
+  Settings
+} from 'lucide-react';
 
 export default function HomePage() {
   const router = useRouter();
@@ -25,52 +36,81 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen p-8 max-w-7xl mx-auto">
-      <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-primary">HR Psychology Dashboard</h1>
-          <p className="text-muted-foreground text-lg">Manage assessments and view insights for your team.</p>
+      <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-8">
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl">
+            <LayoutDashboard size={32} strokeWidth={2.5} />
+          </div>
+          <div>
+            <h1 className="text-4xl font-black text-primary uppercase tracking-tight italic">HR Lab Dashboard</h1>
+            <p className="text-muted-foreground text-lg">Behavioral metrics and assessment management.</p>
+          </div>
         </div>
         <div className="flex gap-4">
           <button 
             onClick={() => router.push('/admin')}
-            className="px-6 py-3 rounded-xl bg-secondary font-bold hover:bg-secondary/80 transition-all border border-border"
+            className="px-6 py-3 rounded-xl bg-secondary font-bold hover:bg-secondary/80 transition-all border border-border flex items-center gap-2 group"
           >
-            Manage Questions
+            <Settings size={18} className="group-hover:rotate-90 transition-transform duration-500" />
+            Questions
           </button>
           <button 
             onClick={() => router.push('/test')}
-            className="px-6 py-3 rounded-xl bg-primary text-white font-bold hover:scale-105 transition-all shadow-lg"
+            className="px-6 py-3 rounded-xl bg-primary text-white font-bold hover:scale-105 transition-all shadow-lg flex items-center gap-2"
           >
-            Take New Test
+            <PlusCircle size={18} />
+            Start Test
           </button>
         </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl">
-          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Assessments</span>
-          <div className="text-5xl font-black mt-2 text-primary">{history.length}</div>
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl flex items-center gap-6">
+          <div className="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center text-success shrink-0">
+            <Users size={28} />
+          </div>
+          <div>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Assessments</span>
+            <div className="text-3xl font-black text-foreground">{history.length}</div>
+          </div>
         </div>
-        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl">
-          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Available Sets</span>
-          <div className="text-5xl font-black mt-2 text-primary">{questionSets.length}</div>
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl flex items-center gap-6">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <ClipboardList size={28} />
+          </div>
+          <div>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Question Sets</span>
+            <div className="text-3xl font-black text-foreground">{questionSets.length}</div>
+          </div>
         </div>
-        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl bg-primary/5">
-          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Quick Insight</span>
-          <div className="text-lg font-bold mt-2 leading-tight">Ready for analysis of your behavioral profile.</div>
+        <div className="glass p-8 rounded-3xl border border-white/20 shadow-xl bg-primary/5 flex items-center gap-6">
+          <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary shrink-0">
+            <TrendingUp size={28} />
+          </div>
+          <div>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Team Insight</span>
+            <div className="text-sm font-bold leading-tight">Profiles optimized for leadership screening.</div>
+          </div>
         </div>
       </div>
 
       <section>
         <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
-          <span className="w-2 h-8 bg-primary rounded-full" />
-          Recent Test History
+          <History className="text-primary" size={24} />
+          Test History
         </h2>
         
         {history.length === 0 ? (
-          <div className="glass p-12 rounded-3xl text-center border-dashed border-2 border-border">
+          <div className="glass p-12 rounded-3xl text-center border-dashed border-2 border-border flex flex-col items-center">
+            <Activity size={48} className="text-muted-foreground/30 mb-4" />
             <p className="text-muted-foreground text-lg mb-6">No assessments taken yet.</p>
-            <button onClick={() => router.push('/test')} className="text-primary font-black hover:underline underline-offset-4">START YOUR FIRST TEST →</button>
+            <button 
+              onClick={() => router.push('/test')} 
+              className="px-8 py-4 bg-primary text-white rounded-2xl font-black flex items-center gap-3 hover:scale-105 transition-all shadow-xl"
+            >
+              <PlusCircle size={20} />
+              START YOUR FIRST TEST
+            </button>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -103,8 +143,8 @@ export default function HomePage() {
                     })}
                   </div>
                   
-                  <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-secondary/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <div className="w-10 h-10 rounded-full bg-secondary/50 text-muted-foreground flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:translate-x-1 shadow-sm shrink-0">
+                    <ChevronRight size={20} strokeWidth={2.5} />
                   </div>
                 </div>
               </div>

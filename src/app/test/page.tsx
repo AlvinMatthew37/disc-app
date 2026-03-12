@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionSet, Trait, calculateScores, TestResult, Answer } from '@/lib/disc-logic';
 import { getQuestionSets, saveResult } from '@/lib/storage';
+import { Check, ArrowRight, Timer, ClipboardList } from 'lucide-react';
 
 // Fisher-Yates Shuffle
 function shuffle<T>(array: T[]): T[] {
@@ -170,7 +171,10 @@ export default function TestPage() {
             </div>
 
             <div className={`flex flex-col items-end gap-1 ${timeLeft <= 5 ? 'animate-pulse' : ''}`}>
-              <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">Time Remaining</span>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Timer size={14} className={timeLeft <= 5 ? 'text-destructive' : ''} />
+                <span className="text-xs font-bold uppercase tracking-[0.2em]">Time Remaining</span>
+              </div>
               <span className={`text-3xl font-black tabular-nums ${timeLeft <= 5 ? 'text-destructive' : 'text-primary'}`}>
                 {timeString}
               </span>
@@ -199,13 +203,13 @@ export default function TestPage() {
                         setCurrentMost(opt.trait);
                         if (currentLeast === opt.trait) setCurrentLeast(null);
                       }}
-                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center font-bold text-xl ${
+                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center ${
                         currentMost === opt.trait 
                         ? 'bg-yellow-400 border-yellow-500 text-black shadow-inner translate-y-1' 
                         : 'bg-background border-border hover:border-yellow-400 text-transparent'
                       }`}
                     >
-                      ✓
+                      <Check size={24} strokeWidth={3} className={currentMost === opt.trait ? 'opacity-100' : 'opacity-0'} />
                     </button>
                   </td>
                   <td className="p-4 text-center">
@@ -214,13 +218,13 @@ export default function TestPage() {
                         setCurrentLeast(opt.trait);
                         if (currentMost === opt.trait) setCurrentMost(null);
                       }}
-                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center font-bold text-xl ${
+                      className={`w-12 h-12 rounded-xl border-2 transition-all flex items-center justify-center ${
                         currentLeast === opt.trait 
                         ? 'bg-green-500 border-green-600 text-white shadow-inner translate-y-1' 
                         : 'bg-background border-border hover:border-green-500 text-transparent'
                       }`}
                     >
-                      ✓
+                      <Check size={24} strokeWidth={3} className={currentLeast === opt.trait ? 'opacity-100' : 'opacity-0'} />
                     </button>
                   </td>
                   <td className="p-6 text-lg font-medium">
@@ -240,9 +244,9 @@ export default function TestPage() {
              <button
                onClick={handleNext}
                disabled={!currentMost || !currentLeast}
-               className="bg-primary px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100"
+               className="bg-primary px-12 py-4 rounded-xl text-white font-black shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 flex items-center gap-3"
              >
-               NEXT SET →
+               NEXT SET <ArrowRight size={20} />
              </button>
           </div>
         </div>
